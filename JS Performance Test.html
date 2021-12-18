@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Performance Tests</title>
+
+    <script>
+      function performanceTest(title, iterations, callbackMethod, status) {
+        console.time(title);
+        for (var i = 0; i < iterations; i++) {
+          callbackMethod(status);
+        }
+        console.timeEnd(title);
+      }
+
+      let status = "success";
+
+      function switchIfMethod(status) {
+        switch (status) {
+          case "success":
+            return handlePayment();
+          case "failed":
+            return handleFailure();
+          case "pending":
+            return handlePending();
+          default:
+            throw Error("Status not recognized!");
+        }
+
+        function handlePayment() {
+          console.log("Payment Done.");
+        }
+        function handleFailure() {
+          console.log("Failed!");
+        }
+        function handlePending() {
+          console.log("Pending!");
+        }
+      }
+
+      function objectLookupMethod(status) {
+        const handlePayment = () => {
+          console.log("Payment Done.");
+        };
+        const handleFailure = () => {
+          console.log("Failed!");
+        };
+        const handlePending = () => {
+          console.log("Pending!");
+        };
+
+        const handlers = {
+          success: handlePayment,
+          failed: handleFailure,
+          pending: handlePending,
+        };
+
+        const handler = handlers[status];
+        if (!handler) {
+          throw new Error("Status not recognized!");
+        }
+        handler();
+      }
+
+      performanceTest(
+        "Switch/if Method:",
+        100000,
+        switchIfMethod,
+        status
+      );
+      console.log("-----------------------------");
+      performanceTest(
+        "Object Lookup Method:",
+        100000,
+        objectLookupMethod,
+        status
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
